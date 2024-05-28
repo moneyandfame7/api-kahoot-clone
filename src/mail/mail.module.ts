@@ -12,12 +12,12 @@ import { MailService } from './mail.service';
     MailerModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
         transport: {
-          host: 'smtp.gmail.com',
-          port: 587,
+          host: config.get('MAIL_HOST'),
+          port: config.get('MAIL_PORT'),
           secure: false,
           auth: {
-            user: 'davidoo1234e@gmail.com',
-            pass: 'kenf dwps cvex zsau',
+            user: config.get('MAIL_USER'),
+            pass: config.get('MAIL_PASS'),
           },
         },
         defaults: {
