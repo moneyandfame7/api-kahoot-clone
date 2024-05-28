@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { Request } from 'express';
 import { AuthService } from './auth.service';
-import { AuthDto, LoginDto } from './auth.dto';
-import { AuthResponse } from './auth.interface';
+import { AuthDto, EmailDto, LoginDto, ResetPasswordDto } from './auth.dto';
+import { AuthResponse, RefreshJwtPayload } from './auth.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -23,8 +23,14 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Get('/refresh')
   async refresh(@Req() req: Request) {
-    const user = req.user;
-    console.log({ user });
+    const user = req.user as RefreshJwtPayload | undefined;
+
+    console.log(user);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    // return this.service.signNewAccessToken(user);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -34,5 +40,12 @@ export class AuthController {
   }
 
   @Post('/forgot')
-  async forgot() {}
+  async forgot(@Body() dto: EmailDto) {
+    return this.service.forgot(dto);
+  }
+
+  @Post('/reset')
+  async reset(@Query('token') token: string, @Body() dto: ResetPasswordDto): Promise<AuthResponse> {
+    return this.service.reset(dto, token);
+  }
 }
