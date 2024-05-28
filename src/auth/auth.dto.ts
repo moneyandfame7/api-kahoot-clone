@@ -20,3 +20,17 @@ export class LoginDto {
   // @MinLength(8)
   public readonly password: string;
 }
+
+export class EmailDto {
+  @IsEmail()
+  public readonly email: string;
+}
+
+export class ResetPasswordDto {
+  @MinLength(8)
+  @MaxLength(20)
+  public readonly password: string;
+
+  @MinLength(8)
+  public readonly confirmPassword: string;
+}
