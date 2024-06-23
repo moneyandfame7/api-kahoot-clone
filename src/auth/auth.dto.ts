@@ -13,11 +13,8 @@ export class AuthDto {
 }
 
 export class LoginDto {
-  // @MinLength(3)
-  // @MaxLength(50)
   public readonly username: string;
 
-  // @MinLength(8)
   public readonly password: string;
 }
 
@@ -28,7 +25,6 @@ export class EmailDto {
 
 export class ResetPasswordDto {
   @MinLength(8)
-  @MaxLength(20)
   public readonly password: string;
 
   @MinLength(8)

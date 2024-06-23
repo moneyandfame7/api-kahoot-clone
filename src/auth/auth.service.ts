@@ -13,7 +13,7 @@ import { Tokens, JwtPayload, AuthResponse, RefreshJwtPayload, RefreshTokenRespon
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService, private jwtService: JwtService, private config: ConfigService, private mailService: MailService) {}
-  async signup({ email, username, password }: AuthDto): Promise<AuthResponse> {
+  async register({ email, username, password }: AuthDto): Promise<AuthResponse> {
     const existedUser = await this.usersService.findByEmail(email);
 
     if (existedUser) {
@@ -111,7 +111,7 @@ export class AuthService {
     };
 
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '60m',
+      expiresIn: '30s',
       secret: this.config.get<string>('JWT_ACCESS'),
     });
 
@@ -128,9 +128,8 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('User Does Not Exist');
     }
-
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '60m',
+      expiresIn: '30s',
       secret: this.config.get<string>('JWT_ACCESS'),
     });
 
